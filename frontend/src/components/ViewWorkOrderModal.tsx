@@ -126,23 +126,23 @@ export function ViewWorkOrderModal({ workOrderId, onClose, onSuccess }: ViewWork
   }, [wo?.id, wo?.status, wo?.startedAt])
 
   const _handleMarkInProgress = () => {
-    setActionLoading(true)
-    setError('')
-    fetch(`/api/work-orders/${workOrderId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'In Progress' }),
-    })
-      .then((r) => {
-        if (!r.ok) throw new Error('Failed to update status')
-        return r.json()
-      })
-      .then(() => {
-        fetchWo()
-        onSuccess()
-      })
-      .catch(() => setError('Failed to mark as In Progress.'))
-      .finally(() => setActionLoading(false))
+    // setActionLoading(true)
+    // setError('')
+    // fetch(`/api/work-orders/${workOrderId}`, {
+    //   method: 'PATCH',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ status: 'In Progress' }),
+    // })
+    //   .then((r) => {
+    //     if (!r.ok) throw new Error('Failed to update status')
+    //     return r.json()
+    //   })
+    //   .then(() => {
+    //     fetchWo()
+    //     onSuccess()
+    //   })
+    //   .catch(() => setError('Failed to mark as In Progress.'))
+    //   .finally(() => setActionLoading(false))
   }
 
   const handleCloseWo = (e: React.FormEvent) => {
@@ -540,7 +540,7 @@ export function ViewWorkOrderModal({ workOrderId, onClose, onSuccess }: ViewWork
                   {liveDowntime != null ? `${liveDowntime} jam` : '—'}
                 </p>
                 <p style={{ margin: '0.25rem 0 0', fontSize: '0.8rem', color: '#64748b' }}>
-                  Dihitung otomatis dari In Progress ({formatDateTime(wo.startedAt)}) hingga Submit. Akan final setelah WO ditutup.
+                  Dihitung otomatis dari In Progress {wo.startedAt ? formatDateTime(wo.startedAt) : 'No Date'} hingga Submit. Akan final setelah WO ditutup.
                 </p>
               </div>
               {closeError && (

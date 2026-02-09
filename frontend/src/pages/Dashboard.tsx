@@ -55,15 +55,15 @@ interface DashboardKpis {
 }
 
 interface TrendMonth {
-  month: string
-  reactiveWOs: number
-  preventiveWOs: number
+  // month: string
+  // reactiveWOs: number
+  // preventiveWOs: number
 }
 
 interface ParetoCause {
-  cause: string
-  hours: number
-  cumulativePercent: number
+  // cause: string
+  // hours: number
+  // cumulativePercent: number
 }
 
 interface UpcomingPM {
@@ -76,10 +76,10 @@ interface UpcomingPM {
 }
 
 interface WOStatusDist {
-  completed: number
-  inProgress: number
-  pending: number
-  open: number
+  // completed: number
+  // inProgress: number
+  // pending: number
+  // open: number
 }
 
 const PIE_COLORS = ['#22c55e', '#3b82f6', '#f97316', '#ef4444']
