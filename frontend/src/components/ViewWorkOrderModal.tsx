@@ -125,25 +125,25 @@ export function ViewWorkOrderModal({ workOrderId, onClose, onSuccess }: ViewWork
     return () => clearInterval(interval)
   }, [wo?.id, wo?.status, wo?.startedAt])
 
-  const _handleMarkInProgress = () => {
-    // setActionLoading(true)
-    // setError('')
-    // fetch(`/api/work-orders/${workOrderId}`, {
-    //   method: 'PATCH',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ status: 'In Progress' }),
-    // })
-    //   .then((r) => {
-    //     if (!r.ok) throw new Error('Failed to update status')
-    //     return r.json()
-    //   })
-    //   .then(() => {
-    //     fetchWo()
-    //     onSuccess()
-    //   })
-    //   .catch(() => setError('Failed to mark as In Progress.'))
-    //   .finally(() => setActionLoading(false))
-  }
+  // const _handleMarkInProgress = () => {
+  //   // setActionLoading(true)
+  //   // setError('')
+  //   // fetch(`/api/work-orders/${workOrderId}`, {
+  //   //   method: 'PATCH',
+  //   //   headers: { 'Content-Type': 'application/json' },
+  //   //   body: JSON.stringify({ status: 'In Progress' }),
+  //   // })
+  //   //   .then((r) => {
+  //   //     if (!r.ok) throw new Error('Failed to update status')
+  //   //     return r.json()
+  //   //   })
+  //   //   .then(() => {
+  //   //     fetchWo()
+  //   //     onSuccess()
+  //   //   })
+  //   //   .catch(() => setError('Failed to mark as In Progress.'))
+  //   //   .finally(() => setActionLoading(false))
+  // }
 
   const handleCloseWo = (e: React.FormEvent) => {
     e.preventDefault()

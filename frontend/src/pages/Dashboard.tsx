@@ -54,17 +54,17 @@ interface DashboardKpis {
   pmComplianceRate: number
 }
 
-interface TrendMonth {
-  // month: string
-  // reactiveWOs: number
-  // preventiveWOs: number
-}
+// interface TrendMonth {
+//   // month: string
+//   // reactiveWOs: number
+//   // preventiveWOs: number
+// }
 
-interface ParetoCause {
-  // cause: string
-  // hours: number
-  // cumulativePercent: number
-}
+// interface ParetoCause {
+//   // cause: string
+//   // hours: number
+//   // cumulativePercent: number
+// }
 
 interface UpcomingPM {
   id: string
@@ -75,12 +75,12 @@ interface UpcomingPM {
   assignedTo: string
 }
 
-interface WOStatusDist {
-  // completed: number
-  // inProgress: number
-  // pending: number
-  // open: number
-}
+// interface WOStatusDist {
+//   // completed: number
+//   // inProgress: number
+//   // pending: number
+//   // open: number
+// }
 
 const PIE_COLORS = ['#22c55e', '#3b82f6', '#f97316', '#ef4444']
 
