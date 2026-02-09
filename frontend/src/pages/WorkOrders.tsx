@@ -27,14 +27,13 @@ const statusClass: Record<string, string> = {
   Completed: 'badge-completed',
 }
 
-const STATUS_FILTER_OPTIONS: { value: ''; label: string }[] = [
-  { value: '', label: 'All status' },
-  { value: 'Open', label: 'Open' },
-  { value: 'In Progress', label: 'In Progress' },
+const STATUS_FILTER_OPTIONS: { value: string; label: string }[] = [
+  { value: '', label: 'All' },
   { value: 'PM', label: 'PM' },
   { value: 'Pending', label: 'Pending' },
   { value: 'Completed', label: 'Completed' },
 ]
+
 
 export function WorkOrders() {
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([])

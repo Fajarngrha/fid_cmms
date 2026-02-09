@@ -125,7 +125,7 @@ export function ViewWorkOrderModal({ workOrderId, onClose, onSuccess }: ViewWork
     return () => clearInterval(interval)
   }, [wo?.id, wo?.status, wo?.startedAt])
 
-  const handleMarkInProgress = () => {
+  const _handleMarkInProgress = () => {
     setActionLoading(true)
     setError('')
     fetch(`/api/work-orders/${workOrderId}`, {
