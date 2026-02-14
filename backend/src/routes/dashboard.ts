@@ -9,9 +9,19 @@ dashboardRouter.get('/dashboard/kpis', (_, res) => {
     (sum, po) => sum + (typeof po.totalHarga === 'number' ? po.totalHarga : 0),
     0
   )
+
+  // Hitung PM Compliance dari jadwal: kepatuhan = % jadwal PM yang statusnya "PM OK" (selesai sesuai)
+  const allPM = mock.upcomingPM
+  const totalPM = allPM.length
+  const compliantCount = allPM.filter((p) => p.keteranganStatus === 'PM OK').length
+  const pmCompliance = totalPM > 0 ? Math.round((compliantCount / totalPM) * 100) : 100
+  const pmComplianceRate = pmCompliance
+
   res.json({
     ...mock.dashboardKpis,
     maintenanceCostIdr: totalMaintenanceCost,
+    pmCompliance,
+    pmComplianceRate,
   })
 })
 
@@ -25,6 +35,26 @@ dashboardRouter.get('/dashboard/pareto', (_, res) => {
 
 dashboardRouter.get('/dashboard/upcoming-pm', (_, res) => {
   res.json(mock.upcomingPM)
+})
+
+dashboardRouter.patch('/dashboard/upcoming-pm/:id', (req, res) => {
+  const idx = mock.upcomingPM.findIndex((p) => p.id === req.params.id)
+  if (idx === -1) return res.status(404).json({ error: 'Jadwal PM tidak ditemukan.' })
+  const body = req.body as Record<string, unknown>
+  const pm = mock.upcomingPM[idx]
+  if (body.keteranganStatus !== undefined) {
+    const v = String(body.keteranganStatus).trim()
+    if (v === 'PM OK' || v === 'Belum Selesai' || v === 'Pending') pm.keteranganStatus = v
+  }
+  if (body.keteranganNotes !== undefined) pm.keteranganNotes = String(body.keteranganNotes).trim() || undefined
+  res.json(pm)
+})
+
+dashboardRouter.delete('/dashboard/upcoming-pm/:id', (req, res) => {
+  const idx = mock.upcomingPM.findIndex((p) => p.id === req.params.id)
+  if (idx === -1) return res.status(404).json({ error: 'Jadwal PM tidak ditemukan.' })
+  mock.upcomingPM.splice(idx, 1)
+  res.status(204).send()
 })
 
 dashboardRouter.post('/dashboard/pm-schedule', (req, res) => {
@@ -70,6 +100,8 @@ dashboardRouter.post('/dashboard/pm-schedule', (req, res) => {
     auditTrail: body.auditTrail != null ? String(body.auditTrail).trim() : undefined,
     photoUrls: body.photoUrls != null ? String(body.photoUrls).trim() : undefined,
     reportGenerated: body.reportGenerated === true,
+    keteranganStatus: body.keteranganStatus === 'PM OK' || body.keteranganStatus === 'Belum Selesai' || body.keteranganStatus === 'Pending' ? body.keteranganStatus : undefined,
+    keteranganNotes: body.keteranganNotes != null ? String(body.keteranganNotes).trim() : undefined,
   }
   mock.upcomingPM.push(newPM)
   res.status(201).json(newPM)

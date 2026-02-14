@@ -122,3 +122,12 @@ workOrdersRouter.post('/work-orders', (req, res) => {
   mock.workOrders.unshift(newWO as (typeof mock.workOrders)[0])
   res.status(201).json(newWO)
 })
+
+
+workOrdersRouter.delete('/work-orders/:id', (req, res) => {
+  const idx = mock.workOrders.findIndex((w) => w.id === req.params.id)
+  if (idx === -1) return res.status(404).json({ error: 'Work order not found' })
+  mock.workOrders.splice(idx, 1)
+  res.status(204).send()
+})
+

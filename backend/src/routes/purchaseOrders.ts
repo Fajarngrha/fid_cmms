@@ -96,3 +96,11 @@ purchaseOrdersRouter.post('/purchase-orders', (req, res) => {
   mock.purchaseOrders.push(newPO as (typeof mock.purchaseOrders)[0])
   res.status(201).json(newPO)
 })
+
+purchaseOrdersRouter.delete('/purchase-orders/:id', (req, res) => {
+  const id = req.params.id
+  const idx = mock.purchaseOrders.findIndex((p) => p.id === id)
+  if (idx === -1) return res.status(404).json({ error: 'PO tidak ditemukan.' })
+  mock.purchaseOrders.splice(idx, 1)
+  res.status(204).send()
+})

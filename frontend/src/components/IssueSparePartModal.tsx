@@ -21,6 +21,7 @@ interface IssueSparePartModalProps {
 
 export function IssueSparePartModal({ part, onClose, onSuccess }: IssueSparePartModalProps) {
   const [qty, setQty] = useState<number | ''>(1)
+  const [pic, setPic] = useState('')
   const [reason, setReason] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -31,6 +32,10 @@ export function IssueSparePartModal({ part, onClose, onSuccess }: IssueSparePart
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    if (!pic.trim()) {
+      setError('PIC wajib diisi.')
+      return
+    }
     if (qtyNum <= 0 || !Number.isInteger(qtyNum)) {
       setError('Jumlah keluar harus bilangan bulat positif.')
       return
@@ -43,7 +48,7 @@ export function IssueSparePartModal({ part, onClose, onSuccess }: IssueSparePart
     fetch(`/api/inventory/spare-parts/${part.id}/issue`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ qty: qtyNum, reason: reason.trim() || undefined }),
+      body: JSON.stringify({ qty: qtyNum, pic: pic.trim(), reason: reason.trim() || undefined }),
     })
       .then((r) => {
         if (!r.ok) return r.json().then((e) => { throw new Error(e.error || 'Gagal mengeluarkan spare part') })
@@ -122,6 +127,18 @@ export function IssueSparePartModal({ part, onClose, onSuccess }: IssueSparePart
             <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>
               Maksimal: {maxQty} {part.unit}
             </p>
+          </div>
+          <div className="form-group">
+            <label className="label" htmlFor="pic">PIC *</label>
+            <input
+              id="pic"
+              className="input"
+              type="text"
+              value={pic}
+              onChange={(e) => setPic(e.target.value)}
+              placeholder="Nama penanggung jawab"
+              required
+            />
           </div>
           <div className="form-group">
             <label className="label" htmlFor="reason">Keterangan (opsional)</label>

@@ -88,6 +88,10 @@ export interface UpcomingPM {
   auditTrail?: string
   photoUrls?: string
   reportGenerated?: boolean
+  /** Keterangan hasil: PM OK | Belum Selesai | Pending */
+  keteranganStatus?: 'PM OK' | 'Belum Selesai' | 'Pending'
+  /** Catatan jika Belum Selesai atau Pending */
+  keteranganNotes?: string
 }
 
 export interface QuickStats {
@@ -210,6 +214,20 @@ export interface SparePart {
   forMachine?: string
 }
 
+/** Riwayat transaksi spare part masuk/keluar untuk audit */
+export interface SparePartMovement {
+  id: string
+  partId: string
+  partCode: string
+  partName: string
+  type: 'in' | 'out'
+  qty: number
+  unit: string
+  reason?: string
+  pic?: string
+  createdAt: string
+}
+
 export type POKategori = 'Preventive' | 'Sparepart' | 'Breakdown/Repair'
 export type POStatus = 'Tahap 1' | 'Tahap 2' | 'Tahap 3' | 'Tahap 4' | 'Tahap 5' | 'Tahap 6' | 'Tahap 7'
 
@@ -287,6 +305,8 @@ const spareParts: SparePart[] = [
   { id: '8', partCode: 'BLT-002', name: 'Timing Belt', category: 'Belts', stock: 6, minStock: 5, unit: 'pcs', location: 'A1-05', spec: 'HTD 5M', forMachine: 'Air Compressor #2' },
 ]
 
+const sparePartHistory: SparePartMovement[] = []
+
 export const mock = {
   workOrders,
   dashboardKpis,
@@ -298,5 +318,6 @@ export const mock = {
   assetHealthCounts,
   assets,
   spareParts,
+  sparePartHistory,
   purchaseOrders,
 }

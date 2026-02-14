@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SchedulePMModal } from '../components/SchedulePMModal'
+import { ViewPMModal, type UpcomingPMDetail } from '../components/ViewPMModal'
 
 interface UpcomingPM {
   id: string
@@ -20,6 +21,7 @@ export function PreventiveMaintenance() {
   const [kpis, setKpis] = useState<DashboardKpis | null>(null)
   const [loading, setLoading] = useState(true)
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false)
+  const [viewPm, setViewPm] = useState<UpcomingPMDetail | null>(null)
 
   const load = () => {
     Promise.all([
@@ -138,9 +140,30 @@ export function PreventiveMaintenance() {
                   <td style={{ padding: '0.75rem' }}>{pm.scheduledDate}</td>
                   <td style={{ padding: '0.75rem' }}>{pm.assignedTo}</td>
                   <td style={{ padding: '0.75rem' }}>
-                    <button type="button" className="btn btn-secondary" style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }}>
-                      View
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }}
+                        onClick={() => setViewPm(pm as UpcomingPMDetail)}
+                      >
+                        View
+                      </button>
+                      <button
+                        type="button"
+                        className="btn"
+                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem', background: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca' }}
+                        onClick={() => {
+                          if (window.confirm(`Hapus jadwal PM ${pm.pmId} (${pm.assetName})?`)) {
+                            fetch(`/api/dashboard/upcoming-pm/${pm.id}`, { method: 'DELETE' })
+                              .then((r) => { if (r.ok) load() })
+                              .catch(() => {})
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -160,6 +183,10 @@ export function PreventiveMaintenance() {
             load()
           }}
         />
+      )}
+
+      {viewPm && (
+        <ViewPMModal pm={viewPm} onClose={() => setViewPm(null)} onSuccess={() => load()} />
       )}
     </div>
   )

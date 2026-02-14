@@ -44,3 +44,10 @@ assetsRouter.post('/assets', (req, res) => {
   mock.assets.push(newAsset as (typeof mock.assets)[0])
   res.status(201).json(newAsset)
 })
+
+assetsRouter.delete('/assets/:id', (req, res) => {
+  const idx = mock.assets.findIndex((a) => a.id === req.params.id)
+  if (idx === -1) return res.status(404).json({ error: 'Asset tidak ditemukan.' })
+  mock.assets.splice(idx, 1)
+  res.status(204).send()
+})

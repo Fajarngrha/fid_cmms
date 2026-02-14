@@ -28,12 +28,13 @@ const statusClass: Record<string, string> = {
 }
 
 const STATUS_FILTER_OPTIONS: { value: string; label: string }[] = [
-  { value: '', label: 'All' },
+  { value: '', label: 'All status' },
+  { value: 'Open', label: 'Open' },
+  { value: 'In Progress', label: 'In Progress' },
   { value: 'PM', label: 'PM' },
   { value: 'Pending', label: 'Pending' },
   { value: 'Completed', label: 'Completed' },
 ]
-
 
 export function WorkOrders() {
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([])
@@ -161,7 +162,7 @@ export function WorkOrders() {
                 <th style={{ padding: '0.75rem' }}>Description</th>
                 <th style={{ padding: '0.75rem' }}>Status</th>
                 <th style={{ padding: '0.75rem' }}>Reported By</th>
-                <th style={{ padding: '0.75rem', minWidth: 140 }}>Actions</th>
+                <th style={{ padding: '0.75rem', minWidth: 200 }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -200,6 +201,20 @@ export function WorkOrders() {
                         title="Edit status: Open → In Progress → Close; fill closure details"
                       >
                         Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="btn"
+                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem', background: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca' }}
+                        onClick={() => {
+                          if (window.confirm(`Hapus work order ${wo.woId}?`)) {
+                            fetch(`/api/work-orders/${wo.id}`, { method: 'DELETE' })
+                              .then((r) => { if (r.ok) load() })
+                              .catch(() => {})
+                          }
+                        }}
+                      >
+                        Delete
                       </button>
                     </div>
                   </td>

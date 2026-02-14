@@ -134,14 +134,30 @@ export function TrackingPO() {
                     {getPOStatusLabel(po.status)}
                   </td>
                   <td style={{ padding: '0.75rem' }}>
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }}
-                      onClick={() => setViewPoId(po.id)}
-                    >
-                      View
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }}
+                        onClick={() => setViewPoId(po.id)}
+                      >
+                        View
+                      </button>
+                      <button
+                        type="button"
+                        className="btn"
+                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem', background: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca' }}
+                        onClick={() => {
+                          if (window.confirm(`Hapus PO ${po.noRegistrasi}?`)) {
+                            fetch(`/api/purchase-orders/${po.id}`, { method: 'DELETE' })
+                              .then((r) => { if (r.ok) load() })
+                              .catch(() => {})
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -145,14 +145,30 @@ export function Assets() {
                     <td style={{ padding: '0.75rem' }}>{a.lastPmDate}</td>
                     <td style={{ padding: '0.75rem' }}>{a.nextPmDate}</td>
                     <td style={{ padding: '0.75rem' }}>
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }}
-                        onClick={() => setViewAsset(a)}
-                      >
-                        View
-                      </button>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem' }}
+                          onClick={() => setViewAsset(a)}
+                        >
+                          View
+                        </button>
+                        <button
+                          type="button"
+                          className="btn"
+                          style={{ padding: '0.35rem 0.65rem', fontSize: '0.8rem', background: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca' }}
+                          onClick={() => {
+                            if (window.confirm(`Hapus asset ${a.assetId} (${a.name})?`)) {
+                              fetch(`/api/assets/${a.id}`, { method: 'DELETE' })
+                                .then((r) => { if (r.ok) load() })
+                                .catch(() => {})
+                            }
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
               ))}

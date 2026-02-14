@@ -60,8 +60,8 @@ INSERT INTO purchase_orders (tanggal, item_deskripsi, model, harga_per_unit, qty
 -- Upcoming PM
 -- ------------------------------------------------------------
 INSERT INTO upcoming_pm (pm_id, asset_name, activity, scheduled_date, assigned_to) VALUES
-('PM2401', 'Air Compressor #1', 'Monthly Inspection', '2024-04-25', 'Sehat'),
-('PM2402', 'Conveyor Belt #3', 'Lubrication', '2024-04-26', 'Agus'),
-('PM2403', 'Hydraulic Pump #2', 'Oil Change', '2024-04-27', 'Budi'),
-('PM2404', 'Boiler #1', 'Safety Check', '2024-04-28', 'Rian'),
-('PM2405', 'Cooling Tower', 'Cleaning & Inspection', '2024-04-29', 'Ahmad');
+('PM2401', 'Air Compressor #1', 'Monthly Inspection', '2024-04-25', 'Fauzan'),
+('PM2402', 'Conveyor Belt #3', 'Lubrication', '2024-04-26', 'Sulthan'),
+('PM2403', 'Hydraulic Pump #2', 'Oil Change', '2024-04-27', 'Fajar'),
+('PM2404', 'Boiler #1', 'Safety Check', '2024-04-28', 'Ali'),
+('PM2405', 'Cooling Tower', 'Cleaning & Inspection', '2024-04-29', 'Rafi');

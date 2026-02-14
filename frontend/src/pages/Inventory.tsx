@@ -16,6 +16,19 @@ interface SparePart {
   forMachine?: string
 }
 
+interface SparePartMovement {
+  id: string
+  partId: string
+  partCode: string
+  partName: string
+  type: 'in' | 'out'
+  qty: number
+  unit: string
+  reason?: string
+  pic?: string
+  createdAt: string
+}
+
 export function Inventory() {
   const [parts, setParts] = useState<SparePart[]>([])
   const [search, setSearch] = useState('')
@@ -23,6 +36,8 @@ export function Inventory() {
   const [loading, setLoading] = useState(true)
   const [addModalOpen, setAddModalOpen] = useState(false)
   const [issuePart, setIssuePart] = useState<SparePart | null>(null)
+  const [history, setHistory] = useState<SparePartMovement[]>([])
+  const [historyTypeFilter, setHistoryTypeFilter] = useState<'all' | 'in' | 'out'>('all')
 
   const load = () => {
     fetch('/api/inventory/spare-parts')
@@ -34,9 +49,21 @@ export function Inventory() {
       .catch(() => setLoading(false))
   }
 
+  const loadHistory = () => {
+    const q = historyTypeFilter === 'all' ? '' : `?type=${historyTypeFilter}`
+    fetch(`/api/inventory/spare-parts/history${q}`)
+      .then((r) => r.json())
+      .then((data) => setHistory(Array.isArray(data) ? data : []))
+      .catch(() => setHistory([]))
+  }
+
   useEffect(() => {
     load()
   }, [])
+
+  useEffect(() => {
+    loadHistory()
+  }, [historyTypeFilter])
 
   const categories = [...new Set(parts.map((p) => p.category))].sort()
 
@@ -182,12 +209,80 @@ export function Inventory() {
         )}
       </div>
 
+      <div className="card" style={{ marginTop: '1.5rem', overflow: 'auto' }}>
+        <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>History Spare Part Masuk & Keluar</h3>
+        <p style={{ margin: '0 0 1rem', fontSize: '0.85rem', color: '#64748b' }}>
+          Rekapan transaksi untuk keperluan audit
+        </p>
+        <div style={{ marginBottom: '1rem' }}>
+          <select
+            className="select"
+            value={historyTypeFilter}
+            onChange={(e) => setHistoryTypeFilter(e.target.value as 'all' | 'in' | 'out')}
+            style={{ width: 'auto', minWidth: 160 }}
+          >
+            <option value="all">Semua</option>
+            <option value="in">Masuk</option>
+            <option value="out">Keluar</option>
+          </select>
+        </div>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+          <thead>
+            <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+              <th style={{ padding: '0.75rem' }}>Tanggal</th>
+              <th style={{ padding: '0.75rem' }}>Part Code</th>
+              <th style={{ padding: '0.75rem' }}>Nama</th>
+              <th style={{ padding: '0.75rem' }}>Tipe</th>
+              <th style={{ padding: '0.75rem' }}>Qty</th>
+              <th style={{ padding: '0.75rem' }}>Unit</th>
+              <th style={{ padding: '0.75rem' }}>PIC</th>
+              <th style={{ padding: '0.75rem' }}>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.length === 0 ? (
+              <tr>
+                <td colSpan={8} style={{ padding: '1.5rem', textAlign: 'center', color: '#64748b' }}>
+                  Belum ada riwayat transaksi spare part.
+                </td>
+              </tr>
+            ) : (
+              history.map((h) => (
+                <tr key={h.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '0.75rem' }}>
+                    {new Date(h.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
+                  </td>
+                  <td style={{ padding: '0.75rem', fontWeight: 500 }}>{h.partCode}</td>
+                  <td style={{ padding: '0.75rem' }}>{h.partName}</td>
+                  <td style={{ padding: '0.75rem' }}>
+                    <span
+                      className="badge"
+                      style={{
+                        background: h.type === 'in' ? '#dcfce7' : '#fee2e2',
+                        color: h.type === 'in' ? '#166534' : '#991b1b',
+                      }}
+                    >
+                      {h.type === 'in' ? 'Masuk' : 'Keluar'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '0.75rem' }}>{h.qty}</td>
+                  <td style={{ padding: '0.75rem' }}>{h.unit}</td>
+                  <td style={{ padding: '0.75rem' }}>{h.pic || '—'}</td>
+                  <td style={{ padding: '0.75rem' }}>{h.reason || '—'}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
       {addModalOpen && (
         <AddSparePartModal
           onClose={() => setAddModalOpen(false)}
           onSuccess={() => {
             setAddModalOpen(false)
             load()
+            loadHistory()
           }}
         />
       )}
@@ -198,6 +293,7 @@ export function Inventory() {
           onSuccess={() => {
             setIssuePart(null)
             load()
+            loadHistory()
           }}
         />
       )}
